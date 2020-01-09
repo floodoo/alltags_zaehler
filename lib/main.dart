@@ -37,11 +37,23 @@ class _MyAppState extends State<MyApp> {
                     icon: Icon(Icons.local_cafe),
                     color: Colors.limeAccent[400]),
                 CountButton(
-                  name: 'Wie oft warst du am Handy',
+                  name: 'Handy',
                   message: 'Du bist schon wieder am Handy?!',
                   icon: Icon(Icons.smartphone),
                   color: Colors.limeAccent[400],
-                )
+                ),
+                CountButton(
+                  name: 'Sport',
+                  message: 'Weiter so',
+                  icon: Icon(Icons.directions_run),
+                  color: Colors.limeAccent[400],
+                ),
+                CountButton(
+                  name: 'Auto fahren',
+                  message: 'Fahr mal lieber mit den Öffis oder lauf mal mehr',
+                  icon: Icon(Icons.directions_car),
+                  color: Colors.limeAccent[400],
+                ),
               ],
             );
           },
