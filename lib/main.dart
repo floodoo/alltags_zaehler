@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:alltags_zaehler/speichern.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -48,12 +51,6 @@ class _MyAppState extends State<MyApp> {
                   icon: Icon(Icons.directions_run),
                   color: Colors.limeAccent[400],
                 ),
-                CountButton(
-                  name: 'Auto fahren',
-                  message: 'Fahr mal lieber mit den Öffis oder lauf mal mehr',
-                  icon: Icon(Icons.directions_car),
-                  color: Colors.limeAccent[400],
-                ),
               ],
             );
           },
@@ -64,7 +61,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class CountButton extends StatefulWidget {
-  const CountButton({
+  CountButton({
     Key key,
     @required this.name,
     @required this.message,
@@ -77,18 +74,29 @@ class CountButton extends StatefulWidget {
   final Icon icon;
   final Color color;
 
+  CounterState counter;
+
   @override
   _CountButtonState createState() => _CountButtonState();
 }
 
 class _CountButtonState extends State<CountButton> {
-  int _counter = 0;
+  @override
+  void initState() {
+    super.initState();
+    widget.counter = CounterState(widget.name);
+    waitCounter();
+  }
+
+  void waitCounter() async {
+    await widget.counter.load();
+    setState(() {});
+  }
 
   void _incrementCounter(BuildContext context) {
     setState(() {
-      _counter++;
+      widget.counter.increment();
     });
-
     final snackBar = SnackBar(
       content: Text(widget.message),
     );
@@ -107,7 +115,7 @@ class _CountButtonState extends State<CountButton> {
             children: <Widget>[
               widget.icon,
               Text('        ${widget.name}        '),
-              Text('$_counter        '),
+              Text('${widget.counter.value}        '),
             ],
           ),
         ),
