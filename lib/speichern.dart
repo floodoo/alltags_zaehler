@@ -1,3 +1,4 @@
+import 'package:alltags_zaehler/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +10,8 @@ class CounterState with ChangeNotifier {
   static const _sharedPrefsKey = 'counterState';
 
   int _value;
+
+  List<CountButton> buttons = [];
 
   int get value => _value;
 
