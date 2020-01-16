@@ -90,6 +90,7 @@ class _MyAppState extends State<MyCounter> {
   @override
   void initState() {
     createObjectsFromRepo();
+
     super.initState();
   }
 
@@ -114,9 +115,9 @@ class _MyAppState extends State<MyCounter> {
           button.name, button.message, button.icon, button.color.value));
     }
 
-    createNewButton() {
+    createNewButton(String name) {
       CountButton button = CountButton(
-        name: 'Treppen laufen',
+        name: name,
         message: 'Weiter so!',
         icon: "directions_run",
         color: Colors.limeAccent[400],
@@ -129,12 +130,26 @@ class _MyAppState extends State<MyCounter> {
       });
     }
 
+    void showDialog() {
+/*const SimpleDialog({
+  title: const Text('Wie soll ihr Counter heißen?')
+children: <Widget>[
+  SimpleDialogOption(
+    onPressed: ,
+  )
+]
+
+  
+
+});*/
+    }
+
     return Scaffold(
       appBar:
           AppBar(backgroundColor: Colors.orange, title: Text('Alltagszähler')),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: createNewButton,
+        onPressed: () => showDialog(),
         child: Icon(Icons.add),
         backgroundColor: Colors.orange,
       ),
