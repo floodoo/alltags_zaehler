@@ -41,42 +41,6 @@ class MyCounter extends StatefulWidget {
         message: 'Du trinkst schon wieder Kaffee?!',
         icon: "coffee",
         color: Colors.limeAccent[400]),
-    CountButton(
-      name: 'Handy',
-      message: 'Du bist schon wieder am Handy?!',
-      icon: "smartphone",
-      color: Colors.limeAccent[400],
-    ),
-    /*     CountButton(
-        name: 'Sport',
-        message: 'Weiter so!',
-        icon: Icon(Icons.directions_run),
-        color: Colors.limeAccent[400],
-      ),
-      CountButton(
-        name: 'Auto fahren',
-        message: 'Es wäre gut mal mehr zu laufen!',
-        icon: Icon(Icons.directions_car),
-        color: Colors.limeAccent[400],
-      ),
-      CountButton(
-        name: 'Ungesundes Essen',
-        message: 'Ess mal lieber was gesundes!',
-        icon: Icon(Icons.fastfood),
-        color: Colors.limeAccent[400],
-      ),
-      CountButton(
-        name: 'Gesundes Essen',
-        message: 'Weiter so!',
-        icon: Icon(Icons.local_dining),
-        color: Colors.limeAccent[400],
-      ),
-      CountButton(
-        name: 'Treppen laufen',
-        message: 'Weiter so!',
-        icon: Icon(Icons.directions_run),
-        color: Colors.limeAccent[400],
-      ), */
   ];
 
   final repo =
@@ -126,17 +90,28 @@ class _MyAppState extends State<MyCounter> {
                       labelText: 'Name der Kategorie'),
                 ),
               ),
-              FlatButton(
-                child: Text('Abbrechen'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                  child: Text('Bestätigen'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  })
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.insert_emoticon),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.cancel),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.check),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
+              )
             ],
           );
         });
