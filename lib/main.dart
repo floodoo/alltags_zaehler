@@ -108,6 +108,40 @@ class _MyAppState extends State<MyCounter> {
     }
   }
 
+  void createDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Was möchtest du Zählen?'),
+            backgroundColor: Colors.white,
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Name der Kategorie'),
+                ),
+              ),
+              FlatButton(
+                child: Text('Abbrechen'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                  child: Text('Bestätigen'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     saveButton(CountButton button) {
@@ -130,26 +164,12 @@ class _MyAppState extends State<MyCounter> {
       });
     }
 
-    void showDialog() {
-/*const SimpleDialog({
-  title: const Text('Wie soll ihr Counter heißen?')
-children: <Widget>[
-  SimpleDialogOption(
-    onPressed: ,
-  )
-]
-
-  
-
-});*/
-    }
-
     return Scaffold(
       appBar:
           AppBar(backgroundColor: Colors.orange, title: Text('Alltagszähler')),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(),
+        onPressed: () => createDialog(context),
         child: Icon(Icons.add),
         backgroundColor: Colors.orange,
       ),
