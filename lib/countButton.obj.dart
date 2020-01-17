@@ -9,8 +9,9 @@ class CountButtonObj {
   String message;
   String icon;
   int color;
+  int value;
 
-  CountButtonObj(this.name, this.message, this.icon, this.color);
+  CountButtonObj(this.name, this.message, this.icon, this.color, this.value);
 }
 
 class CountButtonDesSer extends JsonDesSer<CountButtonObj> {

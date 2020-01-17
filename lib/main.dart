@@ -29,18 +29,22 @@ class MyCounter extends StatefulWidget {
       message: 'Du hast schon wieder Bier getrunken?!',
       icon: "glass-mug-variant",
       color: Colors.limeAccent[400],
+      value: 2,
     ),
     CountButton(
       name: 'Zigarette',
       message: 'Du warst wieder Rauchen?!',
       icon: "smoking",
       color: Colors.limeAccent[400],
+      value: 2,
     ),
     CountButton(
-        name: 'Kaffee',
-        message: 'Du trinkst schon wieder Kaffee?!',
-        icon: "coffee",
-        color: Colors.limeAccent[400]),
+      name: 'Kaffee',
+      message: 'Du trinkst schon wieder Kaffee?!',
+      icon: "coffee",
+      color: Colors.limeAccent[400],
+      value: 3,
+    ),
   ];
 
   final repo =
@@ -66,77 +70,83 @@ class _MyAppState extends State<MyCounter> {
         name: countbuttonobject.name,
         message: countbuttonobject.message,
         icon: countbuttonobject.icon,
+        value: countbuttonobject.value,
       );
 
       widget.buttons.add(button);
     }
   }
 
-  void createDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('Was möchtest du Zählen?'),
-            backgroundColor: Colors.white,
-            children: <Widget>[
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name der Kategorie'),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.insert_emoticon),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.cancel),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.check),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      })
-                ],
-              )
-            ],
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     saveButton(CountButton button) {
-      widget.repo.save(CountButtonObj(
-          button.name, button.message, button.icon, button.color.value));
+      widget.repo.save(CountButtonObj(button.name, button.message, button.icon,
+          button.color.value, button.value));
     }
 
-    createNewButton(String name) {
+    void createNewButton(String name) {
       CountButton button = CountButton(
         name: name,
         message: 'Weiter so!',
         icon: "directions_run",
         color: Colors.limeAccent[400],
+        value: 1,
       );
+
       saveButton(button);
       setState(() {
         log('added new button ${button.name}');
         widget.buttons.add(button);
         log('list length ${widget.buttons.length}');
       });
+    }
+
+    void createDialog(BuildContext context) {
+      final _controller = TextEditingController();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: Text('Was möchtest du Zählen?'),
+              backgroundColor: Colors.white,
+              children: <Widget>[
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Name der Kategorie'),
+                    controller: _controller,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.insert_emoticon),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.check),
+                        onPressed: () {
+                          createNewButton(_controller.text);
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                )
+              ],
+            );
+          });
     }
 
     return Scaffold(
@@ -168,12 +178,14 @@ class CountButton extends StatefulWidget {
     @required this.message,
     @required this.icon,
     @required this.color,
+    @required this.value,
   }) : super(key: key);
 
   final String name;
   final String message;
   final String icon;
   final Color color;
+  final num value;
 
   static CountButton fromJson(Map<String, dynamic> json) {
     return CountButton(
@@ -181,6 +193,7 @@ class CountButton extends StatefulWidget {
       message: json['message'],
       icon: json['icon'],
       color: Color(json['color']),
+      value: json['value'],
     );
   }
 

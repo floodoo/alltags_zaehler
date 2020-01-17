@@ -21,7 +21,7 @@ class CounterState with ChangeNotifier {
   bool get isWaiting => _isWaiting;
   bool get hasError => _hasError;
 
-  void increment() => _setValue(_value + 1);
+  void increment() => _setValue(value + 1);
   void reset() => _setValue(0);
 
   void _setValue(int newValue) {

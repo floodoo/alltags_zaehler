@@ -12,6 +12,7 @@ CountButtonObj _$CountButtonObjFromJson(Map<String, dynamic> json) {
     json['message'] as String,
     json['icon'] as String,
     json['color'] as int,
+    json['value'] as int,
   );
 }
 
@@ -21,4 +22,5 @@ Map<String, dynamic> _$CountButtonObjToJson(CountButtonObj instance) =>
       'message': instance.message,
       'icon': instance.icon,
       'color': instance.color,
+      'value': instance.value,
     };
