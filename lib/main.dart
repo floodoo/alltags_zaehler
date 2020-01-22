@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:alltags_zaehler/countButton.obj.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/speichern.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pref_dessert/pref_dessert_internal.dart';
 import 'package:provider/provider.dart';
@@ -159,25 +161,197 @@ class _MyAppState extends State<MyCounter> {
     }
 
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: Colors.orange, title: Text('Alltagszähler')),
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => createDialog(context),
-        child: Icon(Icons.add),
-        backgroundColor: Colors.orange,
-      ),
-      body: Container(
-        child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: widget.buttons.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(child: widget.buttons[index]);
-          },
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          title: Text('Alltagszähler'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.star),
+              onPressed: () => _exlpode(),
+            ),
+          ],
         ),
-      ),
-    );
+        backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => createDialog(context),
+          child: Icon(Icons.add),
+          backgroundColor: Colors.orange,
+        ),
+        body: Container(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: widget.buttons.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(child: widget.buttons[index]);
+            },
+          ),
+        ));
   }
+
+  _exlpode() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
+  }
+}
+
+class NewPage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () => Navigator.pop(context),
+        child: Stack(children: <Widget>[
+          Positioned(
+              top: 100,
+              left: 10,
+              height: 200,
+              width: 500,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_red.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 500,
+              left: 10,
+              height: 150,
+              width: 200,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_blue.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 300,
+              left: 10,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_green.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 100,
+              left: 10,
+              height: 150,
+              width: 200,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_pink.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 600,
+              left: 50,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_yellow.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 450,
+              left: 10,
+              height: 150,
+              width: 600,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_pink.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 600,
+              left: 10,
+              height: 150,
+              width: 600,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_red.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 300,
+              left: 100,
+              height: 200,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_yellow.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 50,
+              left: 200,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_blue.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 400,
+              left: 1,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_red.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 200,
+              left: 1,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_red1.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 100,
+              left: 1,
+              height: 150,
+              width: 300,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_blue1.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 200,
+              left: 1,
+              height: 150,
+              width: 50,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_blue1.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 150,
+              left: 1,
+              height: 150,
+              width: 600,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_yellow1.flr",
+                animation: "explode",
+              ))),
+          Positioned(
+              top: 250,
+              left: 1,
+              height: 150,
+              width: 150,
+              child: Container(
+                  child: FlareActor(
+                "assets/firework_pink1.flr",
+                animation: "explode",
+              ))),
+        ]));
+  }
+
+  static void startFlare(FlareActor flare) {}
 }
 
 class CountButton extends StatefulWidget {
