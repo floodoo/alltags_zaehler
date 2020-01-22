@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:alltags_zaehler/countButton.obj.dart';
+import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/speichern.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pref_dessert/pref_dessert_internal.dart';
@@ -12,6 +13,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SaveSql();
     return MaterialApp(
       title: 'Alltagszähler',
       home: ChangeNotifierProvider(
@@ -42,6 +44,13 @@ class MyCounter extends StatefulWidget {
       name: 'Kaffee',
       message: 'Du trinkst schon wieder Kaffee?!',
       icon: "coffee",
+      color: Colors.limeAccent[400],
+      value: 3,
+    ),
+    CountButton(
+      name: 'Sport',
+      message: 'Weiter so!',
+      icon: "run",
       color: Colors.limeAccent[400],
       value: 3,
     ),
