@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:alltags_zaehler/countButton.obj.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/speichern.dart';
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pref_dessert/pref_dessert_internal.dart';
@@ -59,8 +57,7 @@ class MyCounter extends StatefulWidget {
     ),
   ];
 
-  final repo =
-      new FuturePreferencesRepository<CountButtonObj>(new CountButtonDesSer());
+  final repo = new FuturePreferencesRepository<CountButtonObj>(new CountButtonDesSer());
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -92,8 +89,7 @@ class _MyAppState extends State<MyCounter> {
   @override
   Widget build(BuildContext context) {
     saveButton(CountButton button) {
-      widget.repo.save(CountButtonObj(button.name, button.message, button.icon,
-          button.color.value, button.value));
+      widget.repo.save(CountButtonObj(button.name, button.message, button.icon, button.color.value, button.value));
     }
 
     void createNewButton(String name) {
@@ -127,9 +123,7 @@ class _MyAppState extends State<MyCounter> {
                     Navigator.pop(context);
                   },
                   child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Name der Kategorie'),
+                    decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Name der Kategorie'),
                     controller: _controller,
                   ),
                 ),
