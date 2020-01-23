@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:alltags_zaehler/countButton.obj.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/speichern.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pref_dessert/pref_dessert_internal.dart';
@@ -166,7 +167,10 @@ class _MyAppState extends State<MyCounter> {
           title: Text('Alltagszähler'),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.star),
+              icon: Icon(
+                Icons.star,
+                color: Colors.orange,
+              ),
               onPressed: () => _exlpode(),
             ),
           ],
@@ -196,7 +200,7 @@ class _MyAppState extends State<MyCounter> {
 class NewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => Navigator.pop(context),
+        onDoubleTap: () => Navigator.pop(context),
         child: Stack(children: <Widget>[
           Positioned(
               top: 100,
@@ -205,7 +209,7 @@ class NewPage extends StatelessWidget {
               width: 500,
               child: Container(
                   child: FlareActor(
-                "assets/firework_red.flr",
+                "assets/animation/firework_red.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -215,7 +219,7 @@ class NewPage extends StatelessWidget {
               width: 200,
               child: Container(
                   child: FlareActor(
-                "assets/firework_blue.flr",
+                "assets/animation/firework_blue.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -225,7 +229,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_green.flr",
+                "assets/animation/firework_green.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -235,7 +239,7 @@ class NewPage extends StatelessWidget {
               width: 200,
               child: Container(
                   child: FlareActor(
-                "assets/firework_pink.flr",
+                "assets/animation/firework_pink.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -245,7 +249,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_yellow.flr",
+                "assets/animation/firework_yellow.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -255,7 +259,7 @@ class NewPage extends StatelessWidget {
               width: 600,
               child: Container(
                   child: FlareActor(
-                "assets/firework_pink.flr",
+                "assets/animation/firework_pink.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -265,7 +269,7 @@ class NewPage extends StatelessWidget {
               width: 600,
               child: Container(
                   child: FlareActor(
-                "assets/firework_red.flr",
+                "assets/animation/firework_red.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -275,7 +279,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_yellow.flr",
+                "assets/animation/firework_yellow.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -285,7 +289,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_blue.flr",
+                "assets/animation/firework_blue.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -295,7 +299,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_red.flr",
+                "assets/animation/firework_red.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -305,7 +309,7 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_red1.flr",
+                "assets/animation/firework_red1.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -315,17 +319,17 @@ class NewPage extends StatelessWidget {
               width: 300,
               child: Container(
                   child: FlareActor(
-                "assets/firework_blue1.flr",
+                "assets/animation/firework_blue1.flr",
                 animation: "explode",
               ))),
           Positioned(
-              top: 200,
+              top: 500,
               left: 1,
               height: 150,
-              width: 50,
+              width: 500,
               child: Container(
                   child: FlareActor(
-                "assets/firework_blue1.flr",
+                "assets/animation/firework_blue1.flr",
                 animation: "explode",
               ))),
           Positioned(
@@ -335,17 +339,17 @@ class NewPage extends StatelessWidget {
               width: 600,
               child: Container(
                   child: FlareActor(
-                "assets/firework_yellow1.flr",
+                "assets/animation/firework_yellow1.flr",
                 animation: "explode",
               ))),
           Positioned(
-              top: 250,
+              top: 500,
               left: 1,
               height: 150,
-              width: 150,
+              width: 600,
               child: Container(
                   child: FlareActor(
-                "assets/firework_pink1.flr",
+                "assets/animation/firework_pink1.flr",
                 animation: "explode",
               ))),
         ]));

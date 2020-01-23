@@ -25,7 +25,7 @@ dependencies:
   pref_dessert: ^0.5.1
   sqflite: ^1.2.0
   flare_flutter: ^2.0.1
-  
+  audioplayer: ^0.5.2
 
   material_design_icons_flutter: ^3.4.4795
 
@@ -46,12 +46,19 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - assets/firework_red.flr
-    - assets/firework_blue.flr
-    - assets/firework_green.flr
-    - assets/firework_pink.flr
-    - assets/firework_yellow.flr
-    - assets/roket.flr
+    - assets/animation/firework_red.flr
+    - assets/animation/firework_blue.flr
+    - assets/animation/firework_green.flr
+    - assets/animation/firework_pink.flr
+    - assets/animation/firework_yellow.flr
+    - assets/animation/firework_red1.flr
+    - assets/animation/firework_blue1.flr
+    - assets/animation/firework_green1.flr
+    - assets/animation/firework_pink1.flr
+    - assets/animation/firework_yellow1.flr
+    - assets/audio/f4.mp3
+  
+  
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
