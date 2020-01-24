@@ -1,13 +1,8 @@
-import 'dart:async';
-import 'dart:developer';
-
-import 'package:alltags_zaehler/countButton.obj.dart';
+import 'package:alltags_zaehler/model/kategorie.dart';
+import 'package:alltags_zaehler/model/zaehler.dart';
 import 'package:alltags_zaehler/save_sql.dart';
-import 'package:alltags_zaehler/speichern.dart';
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pref_dessert/pref_dessert_internal.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -20,80 +15,56 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Alltagszähler',
       home: ChangeNotifierProvider(
-        create: (context) => CounterState(),
+        create: (context) => SaveSql(),
         child: MyCounter(),
       ),
     );
   }
 }
 
-class MyCounter extends StatefulWidget {
-  final List<CountButton> buttons = [
-    CountButton(
-      name: 'Bier',
-      message: 'Du hast schon wieder Bier getrunken?!',
-      icon: "glass-mug-variant",
-      color: Colors.limeAccent[400],
-      value: 2,
-    ),
-    CountButton(
-      name: 'Zigarette',
-      message: 'Du warst wieder Rauchen?!',
-      icon: "smoking",
-      color: Colors.limeAccent[400],
-      value: 2,
-    ),
-    CountButton(
-      name: 'Kaffee',
-      message: 'Du trinkst schon wieder Kaffee?!',
-      icon: "coffee",
-      color: Colors.limeAccent[400],
-      value: 3,
-    ),
-    CountButton(
-      name: 'Sport',
-      message: 'Weiter so!',
-      icon: "run",
-      color: Colors.limeAccent[400],
-      value: 3,
-    ),
-  ];
-
-  final repo =
-      new FuturePreferencesRepository<CountButtonObj>(new CountButtonDesSer());
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyCounter> {
-  @override
-  void initState() {
-    createObjectsFromRepo();
-
-    super.initState();
-  }
-
-  createObjectsFromRepo() async {
-    List<CountButtonObj> buttonObjs = await widget.repo.findAll();
-    for (CountButtonObj countbuttonobject in buttonObjs) {
-      CountButton button = CountButton(
-        color: Color(countbuttonobject.color),
-        name: countbuttonobject.name,
-        message: countbuttonobject.message,
-        icon: countbuttonobject.icon,
-        value: countbuttonobject.value,
-      );
-
-      widget.buttons.add(button);
-    }
-  }
-
+class MyCounter extends StatelessWidget {
+  // final List<CountButton> buttons = [
+  //   CountButton(
+  //     name: 'Bier',
+  //     message: 'Du hast schon wieder Bier getrunken?!',
+  //     icon: "glass-mug-variant",
+  //     color: Colors.limeAccent[400],
+  //     value: 2,
+  //   ),
+  //   CountButton(
+  //     name: 'Zigarette',
+  //     message: 'Du warst wieder Rauchen?!',
+  //     icon: "smoking",
+  //     color: Colors.limeAccent[400],
+  //     value: 2,
+  //   ),
+  //   CountButton(
+  //     name: 'Kaffee',
+  //     message: 'Du trinkst schon wieder Kaffee?!',
+  //     icon: "coffee",
+  //     color: Colors.limeAccent[400],
+  //     value: 3,
+  //   ),
+  //   CountButton(
+  //     name: 'Sport',
+  //     message: 'Weiter so!',
+  //     icon: "run",
+  //     color: Colors.limeAccent[400],
+  //     value: 3,
+  //   ),
+  // ];
   @override
   Widget build(BuildContext context) {
+    final saveSql = Provider.of<SaveSql>(context);
+
     saveButton(CountButton button) {
-      widget.repo.save(CountButtonObj(button.name, button.message, button.icon,
-          button.color.value, button.value));
+      Kategorie kat = Kategorie(
+        name: button.name,
+        snackbar: button.message,
+        farbe: button.color.value,
+        icon: button.icon,
+      );
+      saveSql.saveKategorie(kat);
     }
 
     void createNewButton(String name) {
@@ -106,15 +77,16 @@ class _MyAppState extends State<MyCounter> {
       );
 
       saveButton(button);
-      setState(() {
-        log('added new button ${button.name}');
-        widget.buttons.add(button);
-        log('list length ${widget.buttons.length}');
-      });
     }
 
     void createDialog(BuildContext context) {
       final _controller = TextEditingController();
+
+      _exlpode() {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => NewPage()));
+      }
+
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -171,7 +143,7 @@ class _MyAppState extends State<MyCounter> {
                 Icons.star,
                 color: Colors.orange,
               ),
-              onPressed: () => _explode(),
+              onPressed: null,
             ),
           ],
         ),
@@ -184,16 +156,20 @@ class _MyAppState extends State<MyCounter> {
         body: Container(
           child: ListView.builder(
             padding: const EdgeInsets.all(8),
-            itemCount: widget.buttons.length,
+            itemCount: saveSql.kategorien.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(child: widget.buttons[index]);
+              return Container(
+                child: CountButton(
+                  name: saveSql.kategorien[index].name,
+                  message: saveSql.kategorien[index].snackbar,
+                  icon: saveSql.kategorien[index].icon,
+                  color: Color(saveSql.kategorien[index].farbe),
+                  value: saveSql.zaehler[saveSql.kategorien[index].name],
+                ),
+              );
             },
           ),
         ));
-  }
-
-  _explode() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
   }
 }
 
@@ -374,30 +350,21 @@ class CountButton extends StatefulWidget {
   final Color color;
   final num value;
 
-  static CountButton fromJson(Map<String, dynamic> json) {
-    return CountButton(
-      name: json['name'],
-      message: json['message'],
-      icon: json['icon'],
-      color: Color(json['color']),
-      value: json['value'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'message': message,
-        'icon': icon,
-        'color': color.value,
-      };
-
   @override
   _CountButtonState createState() => _CountButtonState();
 }
 
 class _CountButtonState extends State<CountButton> {
-  void _incrementCounter(CounterState counterState) {
-    counterState.increment();
+  void _incrementCounter(SaveSql saveSql) {
+    saveSql.saveZeahler(
+      Zaehler(
+        kategorie: saveSql.getKategorieId(widget.name),
+        zahl: widget.value == null ? 1 : widget.value + 1,
+        zeitstempel: DateTime.now().millisecondsSinceEpoch,
+      ),
+    );
+    saveSql.getZaehlerCounts();
+
     final snackBar = SnackBar(
       duration: Duration(
         seconds: 1,
@@ -409,7 +376,7 @@ class _CountButtonState extends State<CountButton> {
 
   @override
   Widget build(BuildContext context) {
-    final counterState = Provider.of<CounterState>(context);
+    final saveSql = Provider.of<SaveSql>(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -421,11 +388,11 @@ class _CountButtonState extends State<CountButton> {
             children: <Widget>[
               Icon(MdiIcons.fromString(widget.icon)),
               Text('        ${widget.name}        '),
-              Text('${counterState.value}        '),
+              Text('${widget.value}        '),
             ],
           ),
         ),
-        onPressed: () => _incrementCounter(counterState),
+        onPressed: () => _incrementCounter(saveSql),
       ),
     );
   }
