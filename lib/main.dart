@@ -171,7 +171,7 @@ class _MyAppState extends State<MyCounter> {
                 Icons.star,
                 color: Colors.orange,
               ),
-              onPressed: () => _exlpode(),
+              onPressed: () => _explode(),
             ),
           ],
         ),
@@ -192,7 +192,7 @@ class _MyAppState extends State<MyCounter> {
         ));
   }
 
-  _exlpode() {
+  _explode() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
   }
 }
