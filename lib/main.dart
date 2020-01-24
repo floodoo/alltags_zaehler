@@ -82,11 +82,6 @@ class MyCounter extends StatelessWidget {
     void createDialog(BuildContext context) {
       final _controller = TextEditingController();
 
-      _exlpode() {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NewPage()));
-      }
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -143,7 +138,7 @@ class MyCounter extends StatelessWidget {
                 Icons.star,
                 color: Colors.orange,
               ),
-              onPressed: null,
+              onPressed: () => _explode(context),
             ),
           ],
         ),
@@ -164,12 +159,18 @@ class MyCounter extends StatelessWidget {
                   message: saveSql.kategorien[index].snackbar,
                   icon: saveSql.kategorien[index].icon,
                   color: Color(saveSql.kategorien[index].farbe),
-                  value: saveSql.zaehler[saveSql.kategorien[index].name],
+                  value: saveSql.zaehler[saveSql.kategorien[index].name] == null
+                      ? 0
+                      : saveSql.zaehler[saveSql.kategorien[index].name],
                 ),
               );
             },
           ),
         ));
+  }
+
+  _explode(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
   }
 }
 
