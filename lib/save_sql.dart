@@ -1,81 +1,118 @@
+import 'package:alltags_zaehler/model/kategorie.dart';
+import 'package:alltags_zaehler/model/zaehler.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class SaveSql with ChangeNotifier {
   SaveSql() {
-    _init();
+    _initDatabase();
   }
 
-  static String path = 'floodoo.db';
+  //name anzahl
+  final Map<String, int> zaehler = {};
+
+  //Kategorien
+  List<Kategorie> kategorien = [];
+
+  //new
+  final String name = 'floodoo.db';
+  final String kategorieDB = 'altagszaehler_kategorie';
+  final String zaehlerDB = 'altagszaehler_zaehler';
 
   bool _isLoading = false;
   Database _database;
 
   bool get isLoading => _isLoading;
 
-  _init() async {
+  void _initDatabase() async {
     _isLoading = true;
-    notifyListeners();
-    _database = await openDatabase(path);
+    _database = await openDatabase(
+      join(await getDatabasesPath(), name),
+      version: 3,
+    );
+    // print('delete all');
+    // await _database.execute('''
+    //   DROP TABLE $kategorieDB;
+    //   ''');
 
+    print('create kategorie');
     await _database.execute(''' 
-      CREATE TABLE IF NOT EXISTS kategorie (
+      CREATE TABLE IF NOT EXISTS $kategorieDB (
         id INTEGER PRIMARY KEY, 
-        name TEXT, 
+        name TEXT UNIQUE, 
         snackbar TEXT,
         farbe INTEGER,
-        icon TEXT) 
+        icon TEXT);
       ''');
-
+    print('create Zaehler');
     await _database.execute(''' 
-      CREATE TABLE IF NOT EXISTS zaehler (
+      CREATE TABLE IF NOT EXISTS $zaehlerDB (
         id INTEGER PRIMARY KEY, 
         zahl INTEGER,
         zeitstempel INTEGER,
         kategorie INTEGER,
         FOREIGN KEY(kategorie) REFERENCES kategorie(id)
-        ) 
+        ); 
       ''');
-
-    List<Map> tables =
-        await _database.rawQuery('SELECT name FROM sqlite_master ');
-
-    print("<<<<<<< hier eine table liste >>>>>>>>");
-    print(tables.toString());
-
-    // Insert some records in a transaction
-
-    await _database.insert('kategorie', {
-      'name': 'Kaffee',
-      'snackbar': 'Sauf nicht so viel',
-      'farbe': 234258345,
-      'icon': 'kaffee'
-    });
-
-    List<Map> katList = await _database.rawQuery('SELECT * FROM kategorie');
-
-    print("KATEGORIE: ${katList.toString()}");
-
-    await _database.transaction((txn) async {
-      int id1 = await txn.rawInsert(
-          'INSERT INTO kategorie(name, snackbar, farbe, icon) VALUES("Bier", "Hier ist dein Bier", 283239842934, "Beeer")');
-      print('inserted1: $id1');
-      int id11 = await txn.rawInsert(
-          'INSERT INTO kategorie(name, snackbar, farbe, icon) VALUES("Zigarette", "Hier ist deine Zigarre", 283239842934, "Zigs")');
-      print('inserted1: $id11');
-      int id2 = await txn.rawInsert(
-          'INSERT INTO zaehler(zahl, zeitstempel, kategorie) VALUES(17, 9873482347, 1)',
-          ['another name', 12345678, 3.1416]);
-      print('inserted2: $id2');
-    });
-
-    katList = await _database.rawQuery('SELECT * FROM kategorie');
-    List<Map> zaeList = await _database.rawQuery('SELECT * FROM zaehler');
-
-    print("KATEGORIE: ${katList.toString()}");
-    print("ZAEHER: ${zaeList.toString()}");
-
+    await loadKategories();
+    await getZaehlerCounts();
     _isLoading = false;
+  }
+
+  saveKategorie(Kategorie kategorie) async {
+    print("save Kategorie ${kategorie.name}");
+    await _database.insert(
+      kategorieDB,
+      kategorie.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    loadKategories();
+  }
+
+  saveZeahler(Zaehler zaehler) async {
+    print("save zahler ${zaehler.zahl} in $zaehlerDB");
+    await _database.insert(
+      zaehlerDB,
+      zaehler.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  int getKategorieId(String name) {
+    Iterable<Kategorie> list = kategorien.where((f) => f.name == name);
+    return list.toList()[0].id;
+  }
+
+  Future<void> loadKategories() async {
+    final List<Map<String, dynamic>> maps = await _database.query(kategorieDB);
+
+    List<Kategorie> katList = List.generate(maps.length, (i) {
+      return Kategorie(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        snackbar: maps[i]['snackbar'],
+        farbe: maps[i]['farbe'],
+        icon: maps[i]['icon'],
+      );
+    });
+    kategorien = katList;
     notifyListeners();
+  }
+
+  getZaehlerCounts() async {
+    for (Kategorie kat in kategorien) {
+      zaehler[kat.name] = await getZaehlerCountForKategorie(kat);
+      notifyListeners();
+    }
+  }
+
+  Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
+    num katId = getKategorieId(kategorie.name);
+
+    List<Map<String, dynamic>> list =
+        await _database.rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId');
+    print("thats the COUNT ${list}");
+    return list[0]['count(*)'];
   }
 }
