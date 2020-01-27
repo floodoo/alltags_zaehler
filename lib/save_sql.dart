@@ -110,9 +110,17 @@ class SaveSql with ChangeNotifier {
   Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
     num katId = getKategorieId(kategorie.name);
 
-    List<Map<String, dynamic>> list =
-        await _database.rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId');
+    List<Map<String, dynamic>> list = await _database
+        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId');
     print("thats the COUNT ${list}");
     return list[0]['count(*)'];
+  }
+
+  deleteKategorie(String name) {
+    //delete Kategorie und ihre Zähler
+  }
+
+  resetKategorie(String name) {
+    //delte Zähler einer Kategorie
   }
 }

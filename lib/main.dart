@@ -55,7 +55,7 @@ class MyCounter extends StatelessWidget {
       final _snackbarcontroller = TextEditingController();
       final _iconcontroller = TextEditingController();
       _launchURL() async {
-        const url = 'https://materialdesignicons.com/';
+        const url = 'https://material.io/resources/icons/?style=baseline';
         if (await canLaunch(url)) {
           await launch(url);
         } else {
@@ -371,9 +371,38 @@ class _CountButtonState extends State<CountButton> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final saveSql = Provider.of<SaveSql>(context);
+
+    Widget _morePopup() => PopupMenuButton<int>(
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 1,
+            child: Text("Löschen"),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Text("Zurücksetzen"),
+          ),
+        ],
+        onSelected: (value) {
+          switch (value) {
+            case 1:
+              // lösch dialog
+              break;
+            case 2:
+              print('Jetzt wird zurückgesetzt!');
+              //zurücksetzendialog
+              break;
+            default:
+              print('default');
+          }
+        },
+        icon: Icon(Icons.more_vert),
+      );
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -389,6 +418,7 @@ class _CountButtonState extends State<CountButton> {
               ),
               Text('${widget.value}'),
               SizedBox(width: 25),
+              _morePopup(),
             ],
           ),
         ),
