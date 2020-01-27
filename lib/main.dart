@@ -113,7 +113,7 @@ class MyCounter extends StatelessWidget {
                     IconButton(
                         icon: Icon(Icons.check),
                         onPressed: () {
-                          createNewButton(_kategoriecontroller.text,
+                          createNewButton(_kategoriecontroller.text.trim(),
                               _snackbarcontroller.text, _iconcontroller.text);
                           Navigator.of(context).pop();
                         })
@@ -384,8 +384,11 @@ class _CountButtonState extends State<CountButton> {
           child: Row(
             children: <Widget>[
               Icon(MdiIcons.fromString(widget.icon)),
-              Text('        ${widget.name}        '),
-              Text('${widget.value}        '),
+              Expanded(
+                child: Center(child: Text('${widget.name}')),
+              ),
+              Text('${widget.value}'),
+              SizedBox(width: 25),
             ],
           ),
         ),
