@@ -5,6 +5,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,36 +24,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyCounter extends StatelessWidget {
-  // final List<CountButton> buttons = [
-  //   CountButton(
-  //     name: 'Bier',
-  //     message: 'Du hast schon wieder Bier getrunken?!',
-  //     icon: "glass-mug-variant",
-  //     color: Colors.limeAccent[400],
-  //     value: 2,
-  //   ),
-  //   CountButton(
-  //     name: 'Zigarette',
-  //     message: 'Du warst wieder Rauchen?!',
-  //     icon: "smoking",
-  //     color: Colors.limeAccent[400],
-  //     value: 2,
-  //   ),
-  //   CountButton(
-  //     name: 'Kaffee',
-  //     message: 'Du trinkst schon wieder Kaffee?!',
-  //     icon: "coffee",
-  //     color: Colors.limeAccent[400],
-  //     value: 3,
-  //   ),
-  //   CountButton(
-  //     name: 'Sport',
-  //     message: 'Weiter so!',
-  //     icon: "run",
-  //     color: Colors.limeAccent[400],
-  //     value: 3,
-  //   ),
-  // ];
   @override
   Widget build(BuildContext context) {
     final saveSql = Provider.of<SaveSql>(context);
@@ -67,11 +38,11 @@ class MyCounter extends StatelessWidget {
       saveSql.saveKategorie(kat);
     }
 
-    void createNewButton(String name) {
+    void createNewButton(String name, String snackbar, String icon) {
       CountButton button = CountButton(
         name: name,
-        message: 'Weiter so!',
-        icon: "directions_run",
+        message: snackbar,
+        icon: icon,
         color: Colors.limeAccent[400],
         value: 1,
       );
@@ -80,7 +51,17 @@ class MyCounter extends StatelessWidget {
     }
 
     void createDialog(BuildContext context) {
-      final _controller = TextEditingController();
+      final _kategoriecontroller = TextEditingController();
+      final _snackbarcontroller = TextEditingController();
+      final _iconcontroller = TextEditingController();
+      _launchURL() async {
+        const url = 'https://materialdesignicons.com/';
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+      }
 
       showDialog(
           context: context,
@@ -93,11 +74,27 @@ class MyCounter extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Name der Kategorie'),
-                    controller: _controller,
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Name der Kategorie'),
+                        controller: _kategoriecontroller,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Nachricht'),
+                        controller: _snackbarcontroller,
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Die Icons hier rein schreiben'),
+                        controller: _iconcontroller,
+                      ),
+                    ],
                   ),
                 ),
                 Row(
@@ -105,9 +102,7 @@ class MyCounter extends StatelessWidget {
                   children: <Widget>[
                     IconButton(
                       icon: Icon(Icons.insert_emoticon),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: _launchURL,
                     ),
                     IconButton(
                       icon: Icon(Icons.cancel),
@@ -118,7 +113,8 @@ class MyCounter extends StatelessWidget {
                     IconButton(
                         icon: Icon(Icons.check),
                         onPressed: () {
-                          createNewButton(_controller.text);
+                          createNewButton(_kategoriecontroller.text,
+                              _snackbarcontroller.text, _iconcontroller.text);
                           Navigator.of(context).pop();
                         })
                   ],
