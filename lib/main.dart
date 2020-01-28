@@ -12,7 +12,6 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SaveSql();
     return MaterialApp(
       title: 'Alltagszähler',
       home: ChangeNotifierProvider(
@@ -77,21 +76,16 @@ class MyCounter extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Name der Kategorie'),
+                        decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Name der Kategorie'),
                         controller: _kategoriecontroller,
                       ),
                       TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Nachricht'),
+                        decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Nachricht'),
                         controller: _snackbarcontroller,
                       ),
                       TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Die Icons hier rein schreiben'),
+                        decoration:
+                            InputDecoration(border: OutlineInputBorder(), labelText: 'Die Icons hier rein schreiben'),
                         controller: _iconcontroller,
                       ),
                     ],
@@ -113,8 +107,8 @@ class MyCounter extends StatelessWidget {
                     IconButton(
                         icon: Icon(Icons.check),
                         onPressed: () {
-                          createNewButton(_kategoriecontroller.text.trim(),
-                              _snackbarcontroller.text, _iconcontroller.text);
+                          createNewButton(
+                              _kategoriecontroller.text.trim(), _snackbarcontroller.text, _iconcontroller.text);
                           Navigator.of(context).pop();
                         })
                   ],
@@ -125,51 +119,75 @@ class MyCounter extends StatelessWidget {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: Text('Alltagszähler'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.star,
-                color: Colors.orange,
-              ),
-              onPressed: () => _explode(context),
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: Text('Alltagszähler'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.star,
+              color: Colors.orange,
             ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(currentIndex: 0, items: [
-          BottomNavigationBarItem(
-            
-              icon: new Icon(Icons.home), title: new Text('Home')),
-          BottomNavigationBarItem(
-              icon: new Icon(Icons.reorder), title: new Text('Grafik'))
-        ]),
-        backgroundColor: Colors.white,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => createDialog(context),
-          child: Icon(Icons.add),
-          backgroundColor: Colors.orange,
-        ),
-        body: Container(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: saveSql.kategorien.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                child: CountButton(
-                  name: saveSql.kategorien[index].name,
-                  message: saveSql.kategorien[index].snackbar,
-                  icon: saveSql.kategorien[index].icon,
-                  color: Color(saveSql.kategorien[index].farbe),
-                  value: saveSql.zaehler[saveSql.kategorien[index].name] == null
-                      ? 0
-                      : saveSql.zaehler[saveSql.kategorien[index].name],
-                ),
-              );
-            },
+            onPressed: () => _explode(context),
           ),
-        ));
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: saveSql.curIndex,
+        onTap: saveSql.onChangePage,
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.accessibility_new),
+            title: new Text('Flo'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home),
+            title: new Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.poll),
+            title: new Text('Grafik'),
+          )
+        ],
+      ),
+      backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => createDialog(context),
+        child: Icon(Icons.add),
+        backgroundColor: Colors.orange,
+      ),
+      body: saveSql.curIndex == 0
+          ? Container(
+              child: Center(
+                child: Text("hey, i'm Flo."),
+              ),
+            )
+          : saveSql.curIndex == 1
+              ? Container(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: saveSql.kategorien.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: CountButton(
+                          name: saveSql.kategorien[index].name,
+                          message: saveSql.kategorien[index].snackbar,
+                          icon: saveSql.kategorien[index].icon,
+                          color: Color(saveSql.kategorien[index].farbe),
+                          value: saveSql.zaehler[saveSql.kategorien[index].name] == null
+                              ? 0
+                              : saveSql.zaehler[saveSql.kategorien[index].name],
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : Container(
+                  child: Center(
+                    child: Text('Grafik'),
+                  ),
+                ),
+    );
   }
 
   _explode(BuildContext context) {
