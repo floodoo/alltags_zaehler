@@ -55,7 +55,7 @@ class MyCounter extends StatelessWidget {
       final _snackbarcontroller = TextEditingController();
       final _iconcontroller = TextEditingController();
       _launchURL() async {
-        const url = 'https://material.io/resources/icons/?style=baseline';
+        const url = 'https://ionicons.com/';
         if (await canLaunch(url)) {
           await launch(url);
         } else {
@@ -138,6 +138,13 @@ class MyCounter extends StatelessWidget {
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(currentIndex: 0, items: [
+          BottomNavigationBarItem(
+            
+              icon: new Icon(Icons.home), title: new Text('Home')),
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.reorder), title: new Text('Grafik'))
+        ]),
         backgroundColor: Colors.white,
         floatingActionButton: FloatingActionButton(
           onPressed: () => createDialog(context),
@@ -371,38 +378,77 @@ class _CountButtonState extends State<CountButton> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     final saveSql = Provider.of<SaveSql>(context);
 
     Widget _morePopup() => PopupMenuButton<int>(
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 1,
-            child: Text("Löschen"),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Text("Zurücksetzen"),
-          ),
-        ],
-        onSelected: (value) {
-          switch (value) {
-            case 1:
-              // lösch dialog
-              break;
-            case 2:
-              print('Jetzt wird zurückgesetzt!');
-              //zurücksetzendialog
-              break;
-            default:
-              print('default');
-          }
-        },
-        icon: Icon(Icons.more_vert),
-      );
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 1,
+              child: Text("Löschen"),
+            ),
+            PopupMenuItem(
+              value: 2,
+              child: Text("Zurücksetzen"),
+            ),
+          ],
+          onSelected: (value) {
+            switch (value) {
+              case 1:
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Willst du es wirklich Löschen?'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Abbrechen'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Bestätigen'),
+                            onPressed: () {
+                              saveSql.deleteKategorie(widget.name);
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    });
+                break;
+              case 2:
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Willst du es wirklich Zurücksetzen?'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Abbrechen'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Bestätigen'),
+                            onPressed: () {
+                              saveSql.resetKategorie(widget.name);
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    });
+                break;
+              default:
+                print('default');
+            }
+          },
+          icon: Icon(Icons.more_vert),
+        );
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),

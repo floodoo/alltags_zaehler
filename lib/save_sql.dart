@@ -13,7 +13,7 @@ class SaveSql with ChangeNotifier {
   final Map<String, int> zaehler = {};
 
   //Kategorien
-  List<Kategorie> kategorien = [];
+  final List<Kategorie> kategorien = [];
 
   //new
   final String name = 'floodoo.db';
@@ -27,6 +27,7 @@ class SaveSql with ChangeNotifier {
 
   void _initDatabase() async {
     _isLoading = true;
+    print('PATH ${await getDatabasesPath()}');
     _database = await openDatabase(
       join(await getDatabasesPath(), name),
       version: 3,
@@ -96,31 +97,37 @@ class SaveSql with ChangeNotifier {
         icon: maps[i]['icon'],
       );
     });
-    kategorien = katList;
+    kategorien.clear();
+    kategorien.addAll(katList);
     notifyListeners();
   }
 
   getZaehlerCounts() async {
+    zaehler.clear();
     for (Kategorie kat in kategorien) {
       zaehler[kat.name] = await getZaehlerCountForKategorie(kat);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
     num katId = getKategorieId(kategorie.name);
 
     List<Map<String, dynamic>> list = await _database
-        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId');
-    print("thats the COUNT ${list}");
+        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
     return list[0]['count(*)'];
   }
 
-  deleteKategorie(String name) {
-    //delete Kategorie und ihre Zähler
+  deleteKategorie(String name) async {
+    resetKategorie(name);
+    int id = getKategorieId(name);
+    await _database.rawDelete('DELETE FROM $kategorieDB WHERE id = $id;');
+    loadKategories();
   }
 
-  resetKategorie(String name) {
-    //delte Zähler einer Kategorie
+  resetKategorie(String name) async {
+    int id = getKategorieId(name);
+    await _database.delete(zaehlerDB, where: "kategorie = ?", whereArgs: [id]);
+    getZaehlerCounts();
   }
 }
