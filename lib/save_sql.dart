@@ -25,6 +25,26 @@ class SaveSql with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  //keeps also state for page nav
+  int _curIndex = 1;
+  int get curIndex => _curIndex;
+
+  onChangePage(int index) {
+    _curIndex = index;
+    notifyListeners();
+    switch (_curIndex) {
+      case 0:
+        // contents = "Home";
+        break;
+      case 1:
+        // contents = "Articles";
+        break;
+      case 2:
+        // contents = "User";
+        break;
+    }
+  }
+
   void _initDatabase() async {
     _isLoading = true;
     print('PATH ${await getDatabasesPath()}');
@@ -113,8 +133,8 @@ class SaveSql with ChangeNotifier {
   Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
     num katId = getKategorieId(kategorie.name);
 
-    List<Map<String, dynamic>> list = await _database
-        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
+    List<Map<String, dynamic>> list =
+        await _database.rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
     return list[0]['count(*)'];
   }
 
