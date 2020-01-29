@@ -15,6 +15,13 @@ class SaveSql with ChangeNotifier {
   //Kategorien
   final List<Kategorie> kategorien = [];
 
+  //Zaehler einer Kategorie
+  List<Zaehler> zaehlerOfKategorie = [];
+  List<Zaehler> zaehlerStats = [];
+
+  bool _loadZaehler = false;
+  bool get loadZaehler => _loadZaehler;
+
   //new
   final String name = 'floodoo.db';
   final String kategorieDB = 'altagszaehler_kategorie';
@@ -78,6 +85,8 @@ class SaveSql with ChangeNotifier {
       ''');
     await loadKategories();
     await getZaehlerCounts();
+
+    await getZaehlerByKategorie("Sport");
     _isLoading = false;
   }
 
@@ -98,6 +107,8 @@ class SaveSql with ChangeNotifier {
       zaehler.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
+    await getZaehler();
   }
 
   int getKategorieId(String name) {
@@ -122,6 +133,42 @@ class SaveSql with ChangeNotifier {
     notifyListeners();
   }
 
+  getZaehlerByKategorie(String name) async {
+    _loadZaehler = true;
+    int katId = getKategorieId(name);
+    final List<Map<String, dynamic>> maps = await _database
+        .query("SELECT * FROM $zaehlerDB WHERE kategorie = $katId;");
+
+    zaehlerOfKategorie = List.generate(maps.length, (i) {
+      return Zaehler(
+          id: maps[i]['id'],
+          zahl: maps[i]['zahl'],
+          zeitstempel:
+              DateTime.fromMicrosecondsSinceEpoch(maps[i]['zeitstempel']),
+          kategorie: maps[i]['kategorie']);
+    });
+
+    _loadZaehler = false;
+    notifyListeners();
+  }
+
+  getZaehler() async {
+    _loadZaehler = true;
+    final List<Map<String, dynamic>> maps = await _database.query(zaehlerDB);
+
+    zaehlerStats = List.generate(maps.length, (i) {
+      return Zaehler(
+          id: maps[i]['id'],
+          zahl: maps[i]['zahl'],
+          zeitstempel:
+              DateTime.fromMicrosecondsSinceEpoch(maps[i]['zeitstempel']),
+          kategorie: maps[i]['kategorie']);
+    });
+
+    _loadZaehler = false;
+    notifyListeners();
+  }
+
   getZaehlerCounts() async {
     zaehler.clear();
     for (Kategorie kat in kategorien) {
@@ -133,8 +180,8 @@ class SaveSql with ChangeNotifier {
   Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
     num katId = getKategorieId(kategorie.name);
 
-    List<Map<String, dynamic>> list =
-        await _database.rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
+    List<Map<String, dynamic>> list = await _database
+        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
     return list[0]['count(*)'];
   }
 
