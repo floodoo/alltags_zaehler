@@ -2,6 +2,8 @@ import 'package:alltags_zaehler/count_button.dart';
 import 'package:alltags_zaehler/model/kategorie.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/stats_chart.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -211,9 +213,7 @@ class MyCounter extends StatelessWidget {
           : null,
       body: saveSql.curIndex == 0
           ? Container(
-              child: Center(
-                child: Text("Hallo ich bin Flo"),
-              ),
+              child: FloWidget(),
             )
           : saveSql.curIndex == 1
               ? Container(
@@ -248,15 +248,33 @@ class MyCounter extends StatelessWidget {
     );
   }
 
-  _explode(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => NewPage()));
+  final AudioCache player = AudioCache();
+  _explode(BuildContext context) async {
+    bool result;
+
+    player.play('audio/f5.mp3');
+    result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NewPage(
+                  player: player,
+                )));
+    player.clearCache();
+    print('jsldfjsdlfj');
   }
 }
 
 class NewPage extends StatelessWidget {
+  NewPage({
+    @required this.player,
+  });
+
+  final AudioCache player;
+
   Widget build(BuildContext context) {
     return GestureDetector(
-        onDoubleTap: () => Navigator.pop(context),
+        onDoubleTap: () => Navigator.pop(context, true),
+        onTap: player.clearCache,
         child: Stack(children: <Widget>[
           Positioned(
               top: 100,
@@ -412,4 +430,35 @@ class NewPage extends StatelessWidget {
   }
 
   static void startFlare(FlareActor flare) {}
+}
+
+_launchURLInsta() async {
+  const url = 'https://www.instagram.com/flo.0705/?hl=de';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+class FloWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(children: <Widget>[
+        IconButton(
+          icon: Icon(MdiIcons.instagram),
+          iconSize: 50,
+          onPressed: _launchURLInsta,
+        ),
+        Image(
+          image: AssetImage('assets/images/Bild_1.jpg'),
+        ),
+        Text(
+          'Hi, ich bin Flo und das ist meine App',
+          style: TextStyle(fontSize: 30),
+        ),
+      ]),
+    );
+  }
 }
