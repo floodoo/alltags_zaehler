@@ -9,6 +9,12 @@ class SaveSql with ChangeNotifier {
     _initDatabase();
   }
 
+  Color _pickerColor = Color(0xff443a49);
+  Color _currentColor = Color(4278604287);
+
+  Color get pickerColor => _pickerColor;
+  Color get currentColor => _currentColor;
+
   //name anzahl
   final Map<String, int> zaehler = {};
 
@@ -35,6 +41,16 @@ class SaveSql with ChangeNotifier {
   //keeps also state for page nav
   int _curIndex = 1;
   int get curIndex => _curIndex;
+
+  void changeColor(Color color) {
+    _pickerColor = color;
+    notifyListeners();
+  }
+
+  void setCurrentColor() {
+    _currentColor = _pickerColor;
+    notifyListeners();
+  }
 
   onChangePage(int index) {
     _curIndex = index;

@@ -3,6 +3,8 @@ import 'package:alltags_zaehler/model/kategorie.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/stats_chart.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Alltagszähler',
+      title: 'Alltags Zähler',
       home: ChangeNotifierProvider(
         create: (context) => SaveSql(),
         child: MyCounter(),
@@ -42,7 +44,7 @@ class MyCounter extends StatelessWidget {
         name: name,
         message: snackbar,
         icon: icon,
-        color: Colors.limeAccent[400],
+        color: Color(saveSql.currentColor.value),
         value: 1,
       );
 
@@ -100,6 +102,49 @@ class MyCounter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     IconButton(
+                      icon: Icon(MdiIcons.eyedropper),
+                      //color: saveSql.pickerColor,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          child: AlertDialog(
+                            title: const Text('Pick a color!'),
+                            content: SingleChildScrollView(
+                              child: ColorPicker(
+                                pickerColor: saveSql.pickerColor,
+                                onColorChanged: saveSql.changeColor,
+                                enableLabel: true,
+                                pickerAreaHeightPercent: 0.8,
+                              ),
+                              // Use Material color picker:
+                              //
+                              // child: MaterialPicker(
+                              //   pickerColor: pickerColor,
+                              //   onColorChanged: changeColor,
+                              //   enableLabel: true, // only on portrait mode
+                              // ),
+                              //
+                              // Use Block color picker:
+                              //
+                              // child: BlockPicker(
+                              //   pickerColor: currentColor,
+                              //   onColorChanged: changeColor,
+                              // ),
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: const Text('Got it'),
+                                onPressed: () {
+                                  saveSql.setCurrentColor();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
                       icon: Icon(Icons.insert_emoticon),
                       onPressed: _launchURL,
                     ),
@@ -110,14 +155,15 @@ class MyCounter extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                        icon: Icon(Icons.check),
-                        onPressed: () {
-                          createNewButton(_kategoriecontroller.text.trim(),
-                              _snackbarcontroller.text, _iconcontroller.text);
-                          Navigator.of(context).pop();
-                        })
+                      icon: Icon(Icons.check),
+                      onPressed: () {
+                        createNewButton(_kategoriecontroller.text.trim(),
+                            _snackbarcontroller.text, _iconcontroller.text);
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ],
-                )
+                ),
               ],
             );
           });
@@ -126,7 +172,7 @@ class MyCounter extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Alltagszähler'),
+        title: Text('Alltags Zähler'),
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -151,7 +197,7 @@ class MyCounter extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.poll),
-            title: new Text('Grafik'),
+            title: new Text('Statistik'),
           )
         ],
       ),
@@ -166,7 +212,7 @@ class MyCounter extends StatelessWidget {
       body: saveSql.curIndex == 0
           ? Container(
               child: Center(
-                child: Text("hey, i'm Flo."),
+                child: Text("Hallo ich bin Flo"),
               ),
             )
           : saveSql.curIndex == 1
