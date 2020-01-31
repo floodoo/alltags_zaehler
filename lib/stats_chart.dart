@@ -1,31 +1,29 @@
-import 'package:alltags_zaehler/model/zaehler.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:alltags_zaehler/save_sql.dart';
 
-class SimpleTimeSeriesChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
-  final bool animate;
+import 'package:charts_flutter/flutter.dart' as charts;
 
-  SimpleTimeSeriesChart(this.seriesList, {this.animate});
+class KategorieBarChart extends StatelessWidget {
+  static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
-      seriesList,
-      animate: animate,
-      defaultRenderer: charts.LineRendererConfig(),
-    );
-  }
+    final saveSql = Provider.of<SaveSql>(context);
 
-  static List<charts.Series<Zaehler, DateTime>> createData(List<Zaehler> data) {
-    return [
-      new charts.Series<Zaehler, DateTime>(
-        id: 'Zähler',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (Zaehler zaehler, _) => zaehler.zeitstempel,
-        measureFn: (Zaehler zaehler, _) => zaehler.zahl,
-        data: data,
-      )
-    ];
+    // For horizontal bar charts, set the [vertical] flag to false.
+    return new charts.BarChart(
+      saveSql.chartBars,
+      animate: true,
+      barGroupingType: charts.BarGroupingType.grouped,
+      vertical: false,
+      // It is important when using both primary and secondary axes to choose
+      // the same number of ticks for both sides to get the gridlines to line
+      // up.
+      primaryMeasureAxis:
+          new charts.NumericAxisSpec(tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
+      secondaryMeasureAxis:
+          new charts.NumericAxisSpec(tickProviderSpec: new charts.BasicNumericTickProviderSpec(desiredTickCount: 3)),
+    );
   }
 }
