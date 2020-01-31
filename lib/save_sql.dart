@@ -121,6 +121,7 @@ class SaveSql with ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     loadKategories();
+    notifyListeners();
   }
 
   saveZeahler(Zaehler zaehler) async {
