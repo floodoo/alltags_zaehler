@@ -1,4 +1,3 @@
-import 'package:alltags_zaehler/model/chart_model.dart';
 import 'package:alltags_zaehler/model/kategorie.dart';
 import 'package:alltags_zaehler/model/zaehler.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+
+import 'model/chart_model.dart';
 
 class SaveSql with ChangeNotifier {
   SaveSql() {
@@ -108,8 +109,7 @@ class SaveSql with ChangeNotifier {
       ''');
     await loadKategories();
     await getZaehlerCounts();
-
-    await getZaehlerByKategorie("Sport");
+    notifyListeners();
     _isLoading = false;
   }
 
@@ -166,7 +166,8 @@ class SaveSql with ChangeNotifier {
       chartBars.add(
         new charts.Series<ChartDataModel, String>(
           id: kategorie.name,
-          colorFn: (ChartDataModel model, _) => charts.ColorUtil.fromDartColor(Color(kategorie.farbe)),
+          colorFn: (ChartDataModel model, _) =>
+              charts.ColorUtil.fromDartColor(Color(kategorie.farbe)),
           domainFn: (ChartDataModel model, _) => model.x,
           measureFn: (ChartDataModel model, _) => model.y,
           data: list, //das müsste nach kategorie aufgeteilt werden
@@ -178,7 +179,8 @@ class SaveSql with ChangeNotifier {
   getZaehlerByKategorie(String name) async {
     _loadZaehler = true;
     int katId = getKategorieId(name);
-    final List<Map<String, dynamic>> maps = await _database.query("SELECT * FROM $zaehlerDB WHERE kategorie = $katId;");
+    final List<Map<String, dynamic>> maps = await _database
+        .query("SELECT * FROM $zaehlerDB WHERE kategorie = $katId;");
 
     zaehlerOfKategorie = List.generate(maps.length, (i) {
       return Zaehler(
@@ -214,16 +216,21 @@ class SaveSql with ChangeNotifier {
   createChartData() {
     chartData.clear();
     for (Zaehler zaehler in zaehlerStats) {
-      print('here we go: ${zaehler.zeitstempel.toIso8601String().substring(0, 9)}');
+      print(
+          'here we go: ${zaehler.zeitstempel.toIso8601String().substring(0, 9)}');
 
       if (chartData[zaehler.kategorie] == null) {
         chartData[zaehler.kategorie] = {};
       }
-      if (chartData[zaehler.kategorie][zaehler.zeitstempel.toIso8601String().substring(0, 9)] == null) {
-        chartData[zaehler.kategorie][zaehler.zeitstempel.toIso8601String().substring(0, 9)] = 0;
+      if (chartData[zaehler.kategorie]
+              [zaehler.zeitstempel.toIso8601String().substring(0, 9)] ==
+          null) {
+        chartData[zaehler.kategorie]
+            [zaehler.zeitstempel.toIso8601String().substring(0, 9)] = 0;
       }
 
-      chartData[zaehler.kategorie][zaehler.zeitstempel.toIso8601String().substring(0, 9)]++;
+      chartData[zaehler.kategorie]
+          [zaehler.zeitstempel.toIso8601String().substring(0, 9)]++;
 
       // ChartDataModel model = chartData[zaehler.kategorie];
       // model.x = '${zaehler.zeitstempel.day}.${zaehler.zeitstempel.month}.${zaehler.zeitstempel.year}';
@@ -268,8 +275,8 @@ class SaveSql with ChangeNotifier {
   Future<int> getZaehlerCountForKategorie(Kategorie kategorie) async {
     num katId = getKategorieId(kategorie.name);
 
-    List<Map<String, dynamic>> list =
-        await _database.rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
+    List<Map<String, dynamic>> list = await _database
+        .rawQuery('SELECT count(*) FROM $zaehlerDB WHERE kategorie = $katId;');
     return list[0]['count(*)'];
   }
 
