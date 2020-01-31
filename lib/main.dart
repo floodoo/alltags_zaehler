@@ -3,7 +3,6 @@ import 'package:alltags_zaehler/model/kategorie.dart';
 import 'package:alltags_zaehler/save_sql.dart';
 import 'package:alltags_zaehler/stats_chart.dart';
 import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -110,7 +109,7 @@ class MyCounter extends StatelessWidget {
                         showDialog(
                           context: context,
                           child: AlertDialog(
-                            title: const Text('Pick a color!'),
+                            title: const Text('Wähle eine Farbe!'),
                             content: SingleChildScrollView(
                               child: ColorPicker(
                                 pickerColor: saveSql.pickerColor,
@@ -135,7 +134,7 @@ class MyCounter extends StatelessWidget {
                             ),
                             actions: <Widget>[
                               FlatButton(
-                                child: const Text('Got it'),
+                                child: const Text('Bestätige'),
                                 onPressed: () {
                                   saveSql.setCurrentColor();
                                   Navigator.of(context).pop();
@@ -250,15 +249,7 @@ class MyCounter extends StatelessWidget {
 
   final AudioCache player = AudioCache();
   _explode(BuildContext context) async {
-    bool result;
-
     player.play('audio/f5.mp3');
-    result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => NewPage(
-                  player: player,
-                )));
     player.clearCache();
     print('jsldfjsdlfj');
   }
@@ -454,9 +445,16 @@ class FloWidget extends StatelessWidget {
         Image(
           image: AssetImage('assets/images/Bild_1.jpg'),
         ),
-        Text(
-          'Hi, ich bin Flo und das ist meine App',
-          style: TextStyle(fontSize: 30),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              'Hi, ich bin Flo und das ist meine App',
+              style: TextStyle(
+                fontSize: 30,
+              ),
+            ),
+          ),
         ),
       ]),
     );
