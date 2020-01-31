@@ -15,7 +15,7 @@ class Zaehler {
     return {
       'id': id,
       'zahl': zahl,
-      'zeitstempel': zeitstempel.millisecondsSinceEpoch,
+      'zeitstempel': zeitstempel.toIso8601String(),
       'kategorie': kategorie,
     };
   }
