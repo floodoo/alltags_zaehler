@@ -19,16 +19,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.6
+  audioplayers: ^0.14.0
   provider: ^3.2.0
   json_serializable: ^3.2.2
   pref_dessert: ^0.5.1
   sqflite: ^1.2.0
   flare_flutter: ^2.0.1
-  audioplayer: ^0.5.2
   url_launcher: ^5.4.1
   charts_flutter: ^0.8.1
   flutter_colorpicker: ^0.2.6
+  
+
   material_design_icons_flutter: ^3.4.4795
 
 
@@ -58,7 +59,8 @@ flutter:
     - assets/animation/firework_green1.flr
     - assets/animation/firework_pink1.flr
     - assets/animation/firework_yellow1.flr
-    - assets/audio/f4.mp3
+    - assets/audio/f5.mp3
+    - assets/images/Bild_1.jpg
   
   
 
