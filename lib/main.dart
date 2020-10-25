@@ -79,16 +79,21 @@ class MyCounter extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       TextField(
-                        decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Name der Kategorie'),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Name der Kategorie'),
                         controller: _kategoriecontroller,
                       ),
                       TextField(
-                        decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Nachricht'),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Nachricht'),
                         controller: _snackbarcontroller,
                       ),
                       TextField(
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder(), labelText: 'Die Icons hier rein schreiben'),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Die Icons hier rein schreiben'),
                         controller: _iconcontroller,
                       ),
                     ],
@@ -153,8 +158,8 @@ class MyCounter extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.check),
                       onPressed: () {
-                        createNewButton(
-                            _kategoriecontroller.text.trim(), _snackbarcontroller.text, _iconcontroller.text);
+                        createNewButton(_kategoriecontroller.text.trim(),
+                            _snackbarcontroller.text, _iconcontroller.text);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -221,9 +226,12 @@ class MyCounter extends StatelessWidget {
                           message: saveSql.kategorien[index].snackbar,
                           icon: saveSql.kategorien[index].icon,
                           color: Color(saveSql.kategorien[index].farbe),
-                          value: saveSql.zaehler[saveSql.kategorien[index].name] == null
-                              ? 0
-                              : saveSql.zaehler[saveSql.kategorien[index].name],
+                          value:
+                              saveSql.zaehler[saveSql.kategorien[index].name] ==
+                                      null
+                                  ? 0
+                                  : saveSql
+                                      .zaehler[saveSql.kategorien[index].name],
                         ),
                       );
                     },
@@ -231,7 +239,8 @@ class MyCounter extends StatelessWidget {
                 )
               : Container(
                   child: Center(
-                    child: KategorieBarChart(), //HorizontalBarChartWithSecondaryAxis.withSampleData()
+                    child:
+                        KategorieBarChart(), //HorizontalBarChartWithSecondaryAxis.withSampleData()
                   ),
                 ),
     );
